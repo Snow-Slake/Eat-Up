@@ -1,5 +1,3 @@
-export function makeUser();
-
 export class User {
     constructor(
         private _id: string,
@@ -23,6 +21,18 @@ export class User {
 
     get lastName(): string {
         return this._lastName;
+    }
+
+    get profileImageUrl(): string {
+        return this._profileImageUrl;
+    }
+
+    get coverImageUrl(): string {
+        return this._coverImageUrl;
+    }
+
+    get password(): string {
+        return this._password;
     }
 
     get email(): string {
