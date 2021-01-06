@@ -1,4 +1,4 @@
-import { DATABASE } from '../../config';
+import { DATABASE } from "../../config";
 
 export class User {
     constructor(
@@ -50,7 +50,7 @@ export class User {
     }
 
     toJson = () => {
-        var user = new Map();
+        var user = {};
         user[DATABASE.USER_ID_ENTRY] = this.id;
         user[DATABASE.USER_FIRST_NAME_ENTRY] = this.firstName;
         user[DATABASE.USER_LAST_NAME_ENTRY] = this.lastName;
@@ -61,5 +61,5 @@ export class User {
         user[DATABASE.USER_FOLLOWER_ENTRY] = this.numOfFollowers;
         user[DATABASE.USER_FOLLOWING_ENTRY] = this.numOfFollowing;
         return user;
-    }
+    };
 }
