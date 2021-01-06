@@ -36,7 +36,7 @@ jobs:
       run: echo "##[add-matcher].github/tsc.json"
 
     - name: Tests
-      run:  npm test -- --no-lint
+      #run:  npm test -- --no-lint
 
     - name: Linter
       run:  npm run lint:ci
