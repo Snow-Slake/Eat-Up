@@ -1,3 +1,5 @@
+import { DATABASE } from '../../config';
+
 export class User {
     constructor(
         private _id: string,
@@ -39,11 +41,25 @@ export class User {
         return this._email;
     }
 
-    get numOfFollwers(): number {
+    get numOfFollowers(): number {
         return this._numOfFollowers;
     }
 
-    get numOfFollwing(): number {
+    get numOfFollowing(): number {
         return this._numOfFollowing;
+    }
+
+    toJson = () => {
+        var user = new Map();
+        user[DATABASE.USER_ID_ENTRY] = this.id;
+        user[DATABASE.USER_FIRST_NAME_ENTRY] = this.firstName;
+        user[DATABASE.USER_LAST_NAME_ENTRY] = this.lastName;
+        user[DATABASE.USER_PASSWORD_ENTRY] = this.password;
+        user[DATABASE.USER_EMAIL_ENTRY] = this.email;
+        user[DATABASE.USER_COVER_IMAGE_ENTRY] = this.coverImageUrl;
+        user[DATABASE.USER_PROFILE_IMAGE_ENTRY] = this.profileImageUrl;
+        user[DATABASE.USER_FOLLOWER_ENTRY] = this.numOfFollowers;
+        user[DATABASE.USER_FOLLOWING_ENTRY] = this.numOfFollowing;
+        return user;
     }
 }
