@@ -1,1 +1,1 @@
-export { UserDb } from "./user-db-interface";
+export { UserDb } from "./user/user-db-interface";
