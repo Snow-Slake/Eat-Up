@@ -1,26 +1,48 @@
-# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
-# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
-
-name: Node.js CI
+name: CI
 
 on:
+  push:
+    branches:
+      - master
+      - release-*
   pull_request:
+    branches:
+      - master
+      - release-*
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        node-version: [10.x]
+        node-version: [10.x, 12.x, 14.x]
 
     steps:
     - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
+      with:
+        fetch-depth: 5
+    - name: Use node version ${{ matrix.node-version }}
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
-    - run: npm ci
-    - run: npm run build --if-present
-    - run: npm test
+    - name: Remove existing TypeScript
+      run: |
+        npm uninstall typescript --no-save
+        npm uninstall tslint --no-save
+    - run:  npm ci
+
+    - name: Register Problem Matcher for TSC
+      run: echo "##[add-matcher].github/tsc.json"
+
+    - name: Tests
+      run:  npm test -- --no-lint
+
+    - name: Linter
+      run:  npm run lint:ci
+
+    - name: Adding playwright
+      run: npm install --no-save --no-package-lock playwright
+
+    - name: Validate the browser can import TypeScript
+      run: gulp test-browser-integration
