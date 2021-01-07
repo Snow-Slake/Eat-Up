@@ -1,8 +1,5 @@
-import { db } from "./admin";
 import makeUserDb from "./user-db";
 
-export function makeDb() {
-    return db;
-}
+export { db } from "./admin";
 
-export const userDb = new makeUserDb(makeDb);
+export const userDb = new makeUserDb();
