@@ -24,7 +24,7 @@ jobs:
         npm uninstall typescript --no-save
         npm uninstall tslint --no-save
     - name: install dependencies
-    - run: npm install "microservices/user"
+      run: npm install "microservices/user"
 
     - name: Register Problem Matcher for TSC
       run: echo "##[add-matcher].github/tsc.json"
