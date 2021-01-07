@@ -30,8 +30,7 @@ jobs:
       run: |
         npm uninstall typescript --no-save
         npm uninstall tslint --no-save
-    - run: cd "microservices/user"
-    - run:  npm ci
+    - run: cd "microservices/user" & npm ci
 
     - name: Register Problem Matcher for TSC
       run: echo "##[add-matcher].github/tsc.json"
