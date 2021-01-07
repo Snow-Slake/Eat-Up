@@ -59,7 +59,7 @@ export default class makeUserDb implements UserDb {
         }
     }
 
-    _getCollection(
+    private _getCollection(
         path: string
     ): firebase.default.firestore.Query<firebase.default.firestore.DocumentData> {
         return db.collection(path);

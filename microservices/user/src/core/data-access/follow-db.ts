@@ -164,7 +164,7 @@ export default class makeFollowDb implements FollowDb {
         }
     }
 
-    async _getLastDoc(
+    private async _getLastDoc(
         user_id: string,
         following_id: string
     ): Promise<

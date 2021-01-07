@@ -1,6 +1,6 @@
 import { FileManager } from "../usecases";
 import * as fs from "fs";
-import { DATABASE, LOCAL } from "../../config";
+import { LOCAL } from "../../config";
 
 export default class makeFileManager implements FileManager {
     async insert(key: string, value: string): Promise<boolean> {
@@ -38,7 +38,7 @@ export default class makeFileManager implements FileManager {
         }
     }
 
-    async _loadData(): Promise<Map<string, string>> {
+    private async _loadData(): Promise<Map<string, string>> {
         try {
             var data = JSON.parse(
                 fs.existsSync(LOCAL.FILE_NAME)
