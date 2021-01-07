@@ -5,20 +5,33 @@ import { UserDb } from "../usecases";
 import { db } from "./index";
 
 export default class makeUserDb implements UserDb {
-    insert(user: User): Promise<boolean> {
-        throw new Error("Method not implemented.");
+    async insert(user: User): Promise<boolean> {
+        try {
+            let userKey = await db
+                .collection(DATABASE.USER_COLLECTION_ENTRY)
+                .doc(user.id)
+                .set(user.toJson());
+            return userKey != null;
+        } catch (exception) {
+            throw "an execption has been thrown in user.insert";
+        }
     }
 
-    update(user: User): Promise<boolean> {
-        throw new Error("Method not implemented.");
+    async update(user: User): Promise<boolean> {
+        try {
+            let ref = await db
+                .collection(DATABASE.USER_COLLECTION_ENTRY)
+                .doc(user.id)
+                .update(user.toJson());
+            return ref != null;
+        } catch (exception) {
+            throw "an execption has been thrown in user.update";
+        }
     }
 
     async delete(user: User): Promise<boolean> {
         try {
-            await db
-                .collection(DATABASE.USER_COLLECTION_ENTRY)
-                .doc(user.id)
-                .delete();
+            await db.collection(DATABASE.USER_COLLECTION_ENTRY).doc(user.id).delete();
             return true;
         } catch (exception) {
             throw exception;
@@ -27,9 +40,7 @@ export default class makeUserDb implements UserDb {
 
     async get(conditions: Map<string, string>): Promise<Array<User>> {
         try {
-            var collection = this._getCollection(
-                DATABASE.USER_COLLECTION_ENTRY
-            );
+            var collection = this._getCollection(DATABASE.USER_COLLECTION_ENTRY);
 
             for (let [key, value] of conditions) {
                 collection = collection.where(key, DB_OPERATION.EQUAL, value);
@@ -46,8 +57,7 @@ export default class makeUserDb implements UserDb {
                         password: user[DATABASE.USER_PASSWORD_ENTRY],
                         email: user[DATABASE.USER_EMAIL_ENTRY],
                         coverImageUrl: user[DATABASE.USER_COVER_IMAGE_ENTRY],
-                        profileImageUrl:
-                            user[DATABASE.USER_PROFILE_IMAGE_ENTRY],
+                        profileImageUrl: user[DATABASE.USER_PROFILE_IMAGE_ENTRY],
                         numOfFollowers: user[DATABASE.USER_FOLLOWER_ENTRY],
                         numOfFollowing: user[DATABASE.USER_FOLLOWING_ENTRY],
                     })
