@@ -26,7 +26,6 @@ jobs:
     - name: install dependencies
       run: | 
         npm install "microservices/user" --production=false
-        cd "microservices/user" && npm run lint ".\src\*.ts"
-
+        ./microservices/user/node_modules/.bin/eslint ".\src\*.ts"
     #- name: Tests
       #run:  npm test -- --no-lint
