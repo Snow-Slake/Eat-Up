@@ -24,10 +24,9 @@ jobs:
         npm uninstall typescript --no-save
         npm uninstall tslint --no-save
     - name: install dependencies
-      run: npm install "microservices/user" --production=false
-
-    - name: Linter
-      run:  cd "microservices/user" && npm run lint ".\src\*.ts"
+      run: | 
+        npm install "microservices/user" --production=false
+        cd "microservices/user" && npm run lint ".\src\*.ts"
 
     #- name: Tests
       #run:  npm test -- --no-lint
