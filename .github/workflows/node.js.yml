@@ -1,14 +1,14 @@
 name: CI
 
 on:
-  #push:
-   # branches:
-    #  - main
-     # - release-*
+  push:
+    branches:
+      - main
+      - release-*
   pull_request:
-    # branches:
-    #   - main
-    #   - release-*
+    branches:
+      - main
+      - release-*
 
 jobs:
   build:
@@ -35,7 +35,7 @@ jobs:
     - name: Register Problem Matcher for TSC
       run: echo "##[add-matcher].github/tsc.json"
 
-    - name: Tests
+    #- name: Tests
       #run:  npm test -- --no-lint
 
     - name: Linter
