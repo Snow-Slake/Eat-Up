@@ -27,7 +27,7 @@ jobs:
       run: npm install "microservices/user"
 
     - name: Linter
-      run:  cd "microservices/user" && npm run lint:ci
+      run:  cd "microservices/user" && npm run tslint
 
     #- name: Tests
       #run:  npm test -- --no-lint
