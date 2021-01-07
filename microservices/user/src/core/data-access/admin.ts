@@ -1,7 +1,6 @@
 import firebase from "firebase";
-import "firebase/firestore";
-import { firebaseConfig } from "../../config/db-connection";
+import { DB_CONFIG } from "../../config";
 
-firebase.initializeApp(firebaseConfig);
+firebase.initializeApp(DB_CONFIG);
 
-export const db = firebase.database();
+export const db = firebase.firestore();
