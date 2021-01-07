@@ -9,7 +9,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [10.x, 12.x, 14.x]
+        node-version: [12.x]
 
     steps:
     - uses: actions/checkout@v2
@@ -23,8 +23,8 @@ jobs:
       run: |
         npm uninstall typescript --no-save
         npm uninstall tslint --no-save
-    - run: cd "microservices/user"
-    - run: npm ci
+    - name: install dependencies
+    - run: npm install "microservices/user"
 
     - name: Register Problem Matcher for TSC
       run: echo "##[add-matcher].github/tsc.json"
