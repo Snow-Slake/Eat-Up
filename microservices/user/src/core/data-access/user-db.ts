@@ -5,15 +5,25 @@ import { db, userDb } from "./index";
 
 export default class makeUserDb implements UserDb {
     async insert(user: User): Promise<boolean> {
-        let userKey = (await db.ref(DATABASE.USER_COLLECTION_ENTRY).push(user.toJson())).key;
-        return userKey != null;
+        try {
+            let userKey = (await db.ref(DATABASE.USER_COLLECTION_ENTRY).push(user.toJson())).key;
+            return userKey != null;
+        } catch (exception) {
+            console.log("Exception hass been throwen:", exception);
+            return exception;
+        }
     }
 
     async update(user: User): Promise<boolean> {
         let update = {};
         update["/" + DATABASE.USER_COLLECTION_ENTRY + "/" + user.id] = user.toJson();
-        let ref = await db.ref().update(update);
-        return ref != null;
+        try {
+            let ref = await db.ref().update(update);
+            return ref != null;
+        } catch (exception) {
+            console.log("Exception hass been throwen:", exception);
+            return exception;
+        }
     }
     delete(user: User): Promise<boolean> {
         throw new Error("Method not implemented.");
