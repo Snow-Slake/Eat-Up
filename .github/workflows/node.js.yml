@@ -26,6 +26,6 @@ jobs:
     - name: install dependencies
       run: | 
         npm install "microservices/user" --production=false
-        /home/runner/work/Eat-Up/Eat-Up/microservices/user/node_modules/.bin/eslint ".\src\*.ts"
+        /home/runner/work/Eat-Up/Eat-Up/microservices/user/node_modules/.bin/eslint "./src/*.ts"
     #- name: Tests
       #run:  npm test -- --no-lint
