@@ -3,8 +3,13 @@ import { makeUser } from "../entities";
 import { User } from "../entities/user";
 import { UserDb } from "../usecases";
 import { db } from "./index";
+import { UserDbException } from './exception';
 
 export default class makeUserDb implements UserDb {
+    constructor (
+        private _user_Exception: UserDbException,
+    ) {}
+
     async insert(user: User): Promise<boolean> {
         try {
             let userKey = await db
@@ -13,7 +18,7 @@ export default class makeUserDb implements UserDb {
                 .set(user.toJson());
             return userKey != null;
         } catch (exception) {
-            throw "an execption has been thrown in user.insert";
+            this._user_Exception.insertUserDbException(exception);
         }
     }
 
@@ -25,7 +30,7 @@ export default class makeUserDb implements UserDb {
                 .update(user.toJson());
             return ref != null;
         } catch (exception) {
-            throw "an execption has been thrown in user.update";
+            this._user_Exception.updateUserDbException(exception);
         }
     }
 
@@ -34,7 +39,7 @@ export default class makeUserDb implements UserDb {
             await db.collection(DATABASE.USER_COLLECTION_ENTRY).doc(user.id).delete();
             return true;
         } catch (exception) {
-            throw exception;
+            this._user_Exception.deleteUserDbException(exception);
         }
     }
 
@@ -65,7 +70,7 @@ export default class makeUserDb implements UserDb {
             });
             return users;
         } catch (exception) {
-            throw exception;
+            this._user_Exception.getUserDbException(exception);
         }
     }
 
