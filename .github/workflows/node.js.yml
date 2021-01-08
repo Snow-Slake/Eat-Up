@@ -1,29 +1,31 @@
-name: CI
+name: Users CI
 
 on:
-  pull_request:
+    pull_request:
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+    build:
+        runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [12.x]
+        strategy:
+            matrix:
+                node-version: [12.x]
 
-    steps:
-    - uses: actions/checkout@v2
-      with:
-        fetch-depth: 5
-    - name: Use node version ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
-      with:
-        node-version: ${{ matrix.node-version }}
-    - name: Remove existing TypeScript
-      run: |
-        npm uninstall typescript --no-save
-        npm uninstall tslint --no-save
-    - name: install dependencies
-      run: npm install "microservices/user" --production=false
-    #- name: Tests
-      #run:  npm test -- --no-lint
+        steps:
+            - uses: actions/checkout@v2
+              with:
+                  fetch-depth: 5
+            - name: Use node version ${{ matrix.node-version }}
+              uses: actions/setup-node@v1
+              with:
+                  node-version: ${{ matrix.node-version }}
+            - name: Remove existing TypeScript
+              run: |
+                  npm uninstall typescript --no-save
+                  npm uninstall tslint --no-save
+            - name: install dependencies
+              run: |
+                  npm install "microservices/user" --production=false
+                  cd "microservices/user" &&  npm install @typescript-eslint/eslint-plugin@latest --save-dev && npx eslint "./src/**.ts"
+        #- name: Tests
+        #run:  npm test -- --no-lint
