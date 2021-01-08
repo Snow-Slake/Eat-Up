@@ -24,6 +24,8 @@ jobs:
                   npm uninstall typescript --no-save
                   npm uninstall tslint --no-save
             - name: install dependencies
-              run: npm install "microservices/user" --production=false && cd "microservices/user" && npx eslint .\src\*.ts
+              run: |
+                  npm install "microservices/user" --production=false
+                  cd "microservices/user" &&  npm install @typescript-eslint/eslint-plugin@latest --save-dev && npx eslint .\src\*.ts
         #- name: Tests
         #run:  npm test -- --no-lint
