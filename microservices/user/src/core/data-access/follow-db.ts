@@ -4,8 +4,11 @@ import { makeUser } from "../entities";
 import { User } from "../entities/user";
 import { FollowDb } from "../usecases";
 import { db } from "./admin";
+import { FollowDbException } from "./exception";
 
 export default class makeFollowDb implements FollowDb {
+    constructor(private _follow_exception: FollowDbException) {}
+
     async insert(first_id: string, second_id: string): Promise<boolean> {
         try {
             let data = new Map<string, string>();
@@ -21,7 +24,7 @@ export default class makeFollowDb implements FollowDb {
                 .set(data);
             return true;
         } catch (exception) {
-            throw exception;
+            this._follow_exception.insertFollowDbException(exception);
         }
     }
 
@@ -40,7 +43,7 @@ export default class makeFollowDb implements FollowDb {
                 .delete();
             return true;
         } catch (exception) {
-            throw exception;
+            this._follow_exception.deleteFollowDbException(exception);
         }
     }
 
@@ -77,8 +80,7 @@ export default class makeFollowDb implements FollowDb {
                         password: user[DATABASE.USER_PASSWORD_ENTRY],
                         email: user[DATABASE.USER_EMAIL_ENTRY],
                         coverImageUrl: user[DATABASE.USER_COVER_IMAGE_ENTRY],
-                        profileImageUrl:
-                            user[DATABASE.USER_PROFILE_IMAGE_ENTRY],
+                        profileImageUrl: user[DATABASE.USER_PROFILE_IMAGE_ENTRY],
                         numOfFollowers: user[DATABASE.USER_FOLLOWER_ENTRY],
                         numOfFollowing: user[DATABASE.USER_FOLLOWING_ENTRY],
                     })
@@ -91,7 +93,7 @@ export default class makeFollowDb implements FollowDb {
             // Return data
             return users;
         } catch (exception) {
-            throw exception;
+            this._follow_exception.getFollowDbException(exception);
         }
     }
 
@@ -101,7 +103,7 @@ export default class makeFollowDb implements FollowDb {
             await fileManager.delete(id);
             return true;
         } catch (exception) {
-            throw exception;
+            this._follow_exception.clearFollowDbException(exception);
         }
     }
 
@@ -129,14 +131,11 @@ export default class makeFollowDb implements FollowDb {
             await this.insert(follower_id, following_id);
             return true;
         } catch (exception) {
-            throw exception;
+            this._follow_exception.followDbException(exception);
         }
     }
 
-    async unfollow(
-        follower_id: string,
-        following_id: string
-    ): Promise<boolean> {
+    async unfollow(follower_id: string, following_id: string): Promise<boolean> {
         try {
             let conditions = new Map<string, string>();
 
@@ -160,26 +159,24 @@ export default class makeFollowDb implements FollowDb {
             await this.delete(follower_id, following_id);
             return true;
         } catch (exception) {
-            throw exception;
+            this._follow_exception.unfollowDbException(exception);
         }
     }
 
     private async _getLastDoc(
         user_id: string,
         following_id: string
-    ): Promise<
-        firebase.default.firestore.QuerySnapshot<firebase.default.firestore.DocumentData>
-    > {
-        return await db
-            .collection(DATABASE.FOLLOW_COLLECTION_ENTRY)
-            .doc(user_id)
-            .collection(DATABASE.FOLLOW_USER_COLLECTION_ENTRY)
-            .orderBy(DATABASE.FOLLOW_FOLLOWING_ID_ENTRY, DB_OPERATION.ASC)
-            .where(
-                DATABASE.FOLLOW_FOLLOWING_ID_ENTRY,
-                DB_OPERATION.EQUAL,
-                following_id
-            )
-            .get();
+    ): Promise<firebase.default.firestore.QuerySnapshot<firebase.default.firestore.DocumentData>> {
+        try {
+            return await db
+                .collection(DATABASE.FOLLOW_COLLECTION_ENTRY)
+                .doc(user_id)
+                .collection(DATABASE.FOLLOW_USER_COLLECTION_ENTRY)
+                .orderBy(DATABASE.FOLLOW_FOLLOWING_ID_ENTRY, DB_OPERATION.ASC)
+                .where(DATABASE.FOLLOW_FOLLOWING_ID_ENTRY, DB_OPERATION.EQUAL, following_id)
+                .get();
+        } catch (exception) {
+            this._follow_exception.getLastDocException(exception);
+        }
     }
 }

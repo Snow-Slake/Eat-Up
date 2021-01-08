@@ -1,6 +1,8 @@
 import { User } from "./user";
+import { UserValidators } from "./user-validator-interface";
+import { ValidatorException } from "./exception";
 
-export function buildMakeUser(validtor: UserValidators) {
+export function buildMakeUser(validtor: UserValidators, validator_exception: ValidatorException) {
     return function makeUser(user: {
         id: string;
         firstName: string;
@@ -13,11 +15,11 @@ export function buildMakeUser(validtor: UserValidators) {
         numOfFollowing: number;
     }): User {
         if (!validtor.vaildateEmail(user.email)) {
-            // TODO: call email not vaild exception
+            validator_exception.emailException();
         }
 
         if (!validtor.vaildatePassword(user.password)) {
-            // TODO: call email not vaild exception
+            validator_exception.emailException();
         }
 
         let currentUser = new User(
@@ -33,9 +35,4 @@ export function buildMakeUser(validtor: UserValidators) {
         );
         return currentUser;
     };
-}
-
-export interface UserValidators {
-    vaildateEmail(email: string): boolean;
-    vaildatePassword(password: string): boolean;
 }

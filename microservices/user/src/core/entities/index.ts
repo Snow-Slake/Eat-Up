@@ -1,13 +1,5 @@
 import { buildMakeUser } from "./user-factory";
-import { UserValidators } from "./user-factory";
+import { IUserValidators } from "./user-validator-imp";
+import { IValidatorException } from "./exception/validator-exception-imp";
 
-class Validator implements UserValidators {
-    vaildateEmail(email: string): boolean {
-        throw new Error("Method not implemented.");
-    }
-    vaildatePassword(password: string): boolean {
-        throw new Error("Method not implemented.");
-    }
-}
-
-export const makeUser = buildMakeUser(new Validator());
+export const makeUser = buildMakeUser(new IUserValidators(), new IValidatorException());

@@ -1,5 +1,4 @@
 import { DATABASE } from "../../../config";
-import { makeUser } from "../../entities/index";
 import { User } from "../../entities/user";
 import { UserDb } from "./user-db-interface";
 
