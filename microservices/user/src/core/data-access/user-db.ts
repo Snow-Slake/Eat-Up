@@ -3,20 +3,15 @@ import { makeUser } from "../entities";
 import { User } from "../entities/user";
 import { UserDb } from "../usecases";
 import { db } from "./index";
-import { UserDbException } from './exception';
+import { UserDbException } from "./exception";
 
 export default class makeUserDb implements UserDb {
-    constructor (
-        private _user_Exception: UserDbException,
-    ) {}
+    constructor(private _user_Exception: UserDbException) {}
 
     async insert(user: User): Promise<boolean> {
         try {
-            let userKey = await db
-                .collection(DATABASE.USER_COLLECTION_ENTRY)
-                .doc(user.id)
-                .set(user.toJson());
-            return userKey != null;
+            await db.collection(DATABASE.USER_COLLECTION_ENTRY).doc(user.id).set(user.toJson());
+            return true;
         } catch (exception) {
             this._user_Exception.insertUserDbException(exception);
         }
@@ -25,11 +20,11 @@ export default class makeUserDb implements UserDb {
 
     async update(user: User): Promise<boolean> {
         try {
-            let ref = await db
+            await db
                 .collection(DATABASE.USER_COLLECTION_ENTRY)
                 .doc(user.id)
                 .update(user.toJson());
-            return ref != null;
+            return true;
         } catch (exception) {
             this._user_Exception.updateUserDbException(exception);
         }
@@ -46,17 +41,18 @@ export default class makeUserDb implements UserDb {
         return false;
     }
 
-    async get(conditions: Map<string, string>): Promise<Array<User>> {
+    async get(conditions: Array<string>): Promise<Array<User>> {
         try {
             var collection = this._getCollection(DATABASE.USER_COLLECTION_ENTRY);
 
-            for (let [key, value] of conditions) {
-                collection = collection.where(key, DB_OPERATION.EQUAL, value);
+            for (let i = 0; i < conditions.length; i += 2) {
+                collection = collection.where(conditions[i], DB_OPERATION.EQUAL, conditions[i + 1]);
             }
             var doc = await collection.get();
 
             var users = [];
-            doc.docs.forEach((user) => {
+            for (let i = 0; i < doc.docs.length; i++) {
+                let user = doc.docs[i].data();
                 users.push(
                     makeUser({
                         id: user[DATABASE.USER_ID_ENTRY],
@@ -70,7 +66,7 @@ export default class makeUserDb implements UserDb {
                         numOfFollowing: user[DATABASE.USER_FOLLOWING_ENTRY],
                     })
                 );
-            });
+            }
             return users;
         } catch (exception) {
             this._user_Exception.getUserDbException(exception);
