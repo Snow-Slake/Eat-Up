@@ -29,7 +29,7 @@ jobs:
                   cd "microservices/user" &&  npm install @typescript-eslint/eslint-plugin@latest --save-dev && npx eslint "./src/**.ts"
             - name: Tests
               run: |
-                sudo install yarn
+                install yarn
                 npm install ts-jest typescript @types/jest
                 &&
                 yarn ts-jest config:init
