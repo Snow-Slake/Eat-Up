@@ -1,19 +1,26 @@
 import { makeUser } from "../../entities/index";
-import { User } from "../../entities/user";
 import { UserDb } from "./user-db-interface";
 
 export default function makeAddUser(userDb: UserDb) {
-    return async function addUser(user: User): Promise<boolean> {
+    return async function addUser(
+        id: string,
+        firstName: string,
+        lastName: string,
+        email: string,
+        password: string,
+        profileImageUrl: string,
+        coverImageUrl: string
+    ): Promise<boolean> {
         const current_user = makeUser({
-            id: user.id,
-            firstName: user.firstName,
-            lastName: user.lastName,
-            email: user.email,
-            password: user.password,
-            coverImageUrl: user.coverImageUrl,
+            id: id,
+            firstName: firstName,
+            lastName: lastName,
+            email: email,
+            password: password,
+            coverImageUrl: coverImageUrl,
             numOfFollowers: 0,
             numOfFollowing: 0,
-            profileImageUrl: user.profileImageUrl,
+            profileImageUrl: profileImageUrl,
         });
 
         return await userDb.insert(current_user);

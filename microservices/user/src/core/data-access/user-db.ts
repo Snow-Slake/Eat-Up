@@ -20,6 +20,7 @@ export default class makeUserDb implements UserDb {
         } catch (exception) {
             this._user_Exception.insertUserDbException(exception);
         }
+        return false;
     }
 
     async update(user: User): Promise<boolean> {
@@ -32,6 +33,7 @@ export default class makeUserDb implements UserDb {
         } catch (exception) {
             this._user_Exception.updateUserDbException(exception);
         }
+        return false;
     }
 
     async delete(user: User): Promise<boolean> {
@@ -41,6 +43,7 @@ export default class makeUserDb implements UserDb {
         } catch (exception) {
             this._user_Exception.deleteUserDbException(exception);
         }
+        return false;
     }
 
     async get(conditions: Map<string, string>): Promise<Array<User>> {
@@ -72,6 +75,7 @@ export default class makeUserDb implements UserDb {
         } catch (exception) {
             this._user_Exception.getUserDbException(exception);
         }
+        return null;
     }
 
     private _getCollection(

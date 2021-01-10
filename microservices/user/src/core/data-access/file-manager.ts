@@ -15,6 +15,7 @@ export default class makeFileManager implements FileManager {
         } catch (exception) {
             this._file_exception.insertFileException(exception);
         }
+        return false;
     }
 
     async delete(key: string): Promise<boolean> {
@@ -27,6 +28,7 @@ export default class makeFileManager implements FileManager {
         } catch (exception) {
             this._file_exception.deleteFileException(exception);
         }
+        return false;
     }
 
     async get(key: string): Promise<string> {
@@ -36,6 +38,7 @@ export default class makeFileManager implements FileManager {
         } catch (exception) {
             this._file_exception.getFileException(exception);
         }
+        return null;
     }
 
     private async _loadData(): Promise<Map<string, string>> {
@@ -47,5 +50,6 @@ export default class makeFileManager implements FileManager {
         } catch (exception) {
             this._file_exception.loadFileException(exception);
         }
+        return null;
     }
 }
