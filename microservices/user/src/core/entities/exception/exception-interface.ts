@@ -1,4 +1,4 @@
 export interface ValidatorException {
-    emailException(): string;
-    passwordException(): string;
+    emailException(): void;
+    passwordException(): void;
 }

@@ -26,6 +26,7 @@ export default class makeFollowDb implements FollowDb {
         } catch (exception) {
             this._follow_exception.insertFollowDbException(exception);
         }
+        return false;
     }
 
     async delete(first_id: string, second_id: string): Promise<boolean> {
@@ -45,6 +46,7 @@ export default class makeFollowDb implements FollowDb {
         } catch (exception) {
             this._follow_exception.deleteFollowDbException(exception);
         }
+        return false;
     }
 
     async get(id: string): Promise<Array<User>> {
@@ -95,6 +97,7 @@ export default class makeFollowDb implements FollowDb {
         } catch (exception) {
             this._follow_exception.getFollowDbException(exception);
         }
+        return null;
     }
 
     async clear(id: string): Promise<boolean> {
@@ -105,6 +108,7 @@ export default class makeFollowDb implements FollowDb {
         } catch (exception) {
             this._follow_exception.clearFollowDbException(exception);
         }
+        return false;
     }
 
     async follow(follower_id: string, following_id: string): Promise<boolean> {
@@ -133,6 +137,7 @@ export default class makeFollowDb implements FollowDb {
         } catch (exception) {
             this._follow_exception.followDbException(exception);
         }
+        return false;
     }
 
     async unfollow(follower_id: string, following_id: string): Promise<boolean> {
@@ -161,6 +166,7 @@ export default class makeFollowDb implements FollowDb {
         } catch (exception) {
             this._follow_exception.unfollowDbException(exception);
         }
+        return false;
     }
 
     private async _getLastDoc(
