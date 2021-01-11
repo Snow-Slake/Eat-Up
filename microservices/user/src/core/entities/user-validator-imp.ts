@@ -3,11 +3,11 @@ import { UserValidators } from "./user-validator-interface";
 
 export class IUserValidators implements UserValidators {
     vaildateEmail(email: string): boolean {
-        LOCAL.EMAIL_VALIDATOR.forEach((key) => {
-            if (email.includes(key)) {
+        for (let i = 0; i < LOCAL.EMAIL_VALIDATOR.length; i++) {
+            if (email.includes(LOCAL.EMAIL_VALIDATOR[i])) {
                 return true;
             }
-        });
+        }
         return false;
     }
     vaildatePassword(password: string): boolean {
