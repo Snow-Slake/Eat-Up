@@ -113,14 +113,20 @@ export default class makeFollowDb implements FollowDb {
 
     async follow(follower_id: string, following_id: string): Promise<boolean> {
         try {
-            let conditions = new Map<string, string>();
+            let conditions = [];
 
             // fetching first user
-            conditions[DATABASE.USER_ID_ENTRY] = follower_id;
+            conditions.push(DATABASE.USER_ID_ENTRY);
+            conditions.push(follower_id);
             var first_user = await userDb.get(conditions)[0];
 
+            // clear list
+            conditions.pop();
+            conditions.pop();
+
             // fetching second user
-            conditions[DATABASE.USER_ID_ENTRY] = following_id;
+            conditions.push(DATABASE.USER_ID_ENTRY);
+            conditions.push(following_id);
             var second_user = await userDb.get(conditions)[0];
 
             // incrementation for follows
@@ -142,14 +148,20 @@ export default class makeFollowDb implements FollowDb {
 
     async unfollow(follower_id: string, following_id: string): Promise<boolean> {
         try {
-            let conditions = new Map<string, string>();
+            let conditions = [];
 
             // fetching first user
-            conditions[DATABASE.USER_ID_ENTRY] = follower_id;
+            conditions.push(DATABASE.USER_ID_ENTRY);
+            conditions.push(follower_id);
             var first_user = await userDb.get(conditions)[0];
+            
+            // clear list
+            conditions.pop();
+            conditions.pop();
 
             // fetching second user
-            conditions[DATABASE.USER_ID_ENTRY] = following_id;
+            conditions.push(DATABASE.USER_ID_ENTRY);
+            conditions.push(follower_id);
             var second_user = await userDb.get(conditions)[0];
 
             // decrementation for follows
