@@ -29,7 +29,7 @@ jobs:
                   cd "microservices/user" &&  npm install @typescript-eslint/eslint-plugin@latest --save-dev && npx eslint "./src/**.ts"
             - name: Tests
               run: |
-                npm install ts-jest typescript @types/jest
+                npm install --save-dev ts-jest/typescript/@typescript-jest
                 &&
                 yarn ts-jest config:init
                 &&
