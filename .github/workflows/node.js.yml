@@ -30,4 +30,4 @@ jobs:
             - name: Tests
               run: |
                 npm install "microservices/user" --production=false
-                cd "microservices/user" && npm install --save-dev ts-jest/typescript/@typescript-jest && yarn ts-jest config:init && npm test
+                cd "microservices/user/src/core/data-access" && npm test
