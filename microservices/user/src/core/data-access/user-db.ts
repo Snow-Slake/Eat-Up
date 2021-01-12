@@ -3,7 +3,10 @@ import { makeUser } from "../entities";
 import { User } from "../entities/user";
 import { UserDb } from "../usecases";
 import { db } from "./index";
+import firebase from 'firebase'
 import { UserDbException } from "./exception";
+import { Debugger } from "inspector";
+import { promises } from "fs";
 
 export default class makeUserDb implements UserDb {
     constructor(private _user_Exception: UserDbException) {}
@@ -41,16 +44,22 @@ export default class makeUserDb implements UserDb {
         return false;
     }
 
+    private async geUsers(conditions: Array<string>): Promise<firebase.firestore.DocumentData> {
+            
+        var collection = this._getCollection(DATABASE.USER_COLLECTION_ENTRY);
+
+        for (let i = 0; i < conditions.length; i += 2) {
+            collection = collection.where(conditions[i], DB_OPERATION.EQUAL, conditions[i + 1]);
+        }
+
+        return collection.get();
+    }
+
     async get(conditions: Array<string>): Promise<Array<User>> {
         try {
-            var collection = this._getCollection(DATABASE.USER_COLLECTION_ENTRY);
+            var doc = await this.geUsers(conditions);
 
-            for (let i = 0; i < conditions.length; i += 2) {
-                collection = collection.where(conditions[i], DB_OPERATION.EQUAL, conditions[i + 1]);
-            }
-            var doc = await collection.get();
-
-            var users = [];
+            var users: User[] = [];
             for (let i = 0; i < doc.docs.length; i++) {
                 let user = doc.docs[i].data();
                 users.push(
@@ -71,12 +80,17 @@ export default class makeUserDb implements UserDb {
         } catch (exception) {
             this._user_Exception.getUserDbException(exception);
         }
-        return null;
+        return null as any;
+    }
+
+    async getRowDoc(conditions: Array<string>): Promise<Array<firebase.firestore.DocumentSnapshot>> {
+        let doc = await this.geUsers(conditions);
+        return doc.docs.map(user => user.data());
     }
 
     private _getCollection(
         path: string
-    ): firebase.default.firestore.Query<firebase.default.firestore.DocumentData> {
+    ): firebase.firestore.Query<firebase.firestore.DocumentData> {
         return db.collection(path);
     }
 }

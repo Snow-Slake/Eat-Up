@@ -16,12 +16,12 @@ export function buildMakeUser(validtor: UserValidators, validator_exception: Val
     }): User {
         if (!validtor.vaildateEmail(user.email)) {
             validator_exception.emailException();
-            return null;
+            return null as any;
         }
 
         if (!validtor.vaildatePassword(user.password)) {
             validator_exception.emailException();
-            return null;
+            return null as any;
         }
 
         let currentUser = new User(

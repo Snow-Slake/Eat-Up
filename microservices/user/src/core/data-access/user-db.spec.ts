@@ -1,34 +1,35 @@
 import { userDb } from ".";
 import { User } from "../entities/user";
 import { DATABASE } from "../../config";
+import { makeUser } from "../entities";
 
 var t = 1;
 var fail_flag = false;
 
 describe("testing user db operations", () => {
+    let current_inserted_users: User[] = [];
     beforeEach(async () => {
         console.log("Running on test " + t++);
         
         fail_flag = false;
-        let current_users = await userDb.get([]);
 
-        if (current_users != null) {
-            for (let i = 0; i < current_users.length; i++) {
-                await userDb.delete(current_users[i]);
+        if (current_inserted_users != null) {
+            for (let i = 0; i < current_inserted_users.length; i++) {
+                await userDb.delete(current_inserted_users[i]);
             }
         }
+        current_inserted_users = [];
     });
 
     it("Test insert user", async () => {
-        let added = await userDb.insert(
-            new User('1', "mo", "medo", "xx@gmail.com", "aaaa11AA", "xxx", "aaaa11AAy", 0, 0)
-        );
-
+        let user = makeUser(new User('1', "mo", "medo", "xx@gmail.com", "aaaa11AA", "xxx", "aaaa11AAy", 0, 0));
+        let added = await userDb.insert(user);
         expect(added).toBe(true);
+        current_inserted_users.push(user)
     });
 
     it("Test insert, delete and get users", async () => {
-        let users = [];
+        let users: User[] = [];
 
         users.push(new User('1', "mo", "medo", "xx@gmail.com", "aaaa11AA", "xxx", "aaaa11AAy", 0, 0));
         users.push(new User('2', "mo", "medo", "xx@gmail.com", "aaaa11AA", "xxx", "aaaa11AAy", 0, 0));
@@ -66,8 +67,8 @@ describe("testing user db operations", () => {
     });
 
     it("Test all user operatons", async () => {
-        let users = [];
-        let IDs = [];
+        let users: User[] = [];
+        let IDs: string[] = [];
 
         IDs.push('1');
         IDs.push('2');
@@ -88,8 +89,8 @@ describe("testing user db operations", () => {
         await userDb.update(users[3]);
         await userDb.update(users[4]);
 
-        let current_users = [];
-        let conditions = [];
+        let current_users: User[] = [];
+        let conditions: string[] = [];
 
         conditions.push(DATABASE.USER_ID_ENTRY);
         conditions.push(users[3].id);

@@ -49,24 +49,24 @@ export class User {
         return this._numOfFollowing;
     }
 
-    incrementFollowers(): void {
+    incrementFollowers = () => {
         this._numOfFollowers++;
     }
 
-    decrementFollowers(): void {
+    decrementFollowers = () => {
         this._numOfFollowers--;
     }
 
-    incrementFollowing(): void {
+    incrementFollowing = () => {
         this._numOfFollowing++;
     }
 
-    decrementFollowing(): void {
+    decrementFollowing = () => {
         this._numOfFollowing--;
     }
 
     toJson = () => {
-        var user = {};
+        let user = {};
         user[DATABASE.USER_ID_ENTRY] = this.id;
         user[DATABASE.USER_FIRST_NAME_ENTRY] = this.firstName;
         user[DATABASE.USER_LAST_NAME_ENTRY] = this.lastName;
