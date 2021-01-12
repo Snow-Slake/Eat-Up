@@ -4,7 +4,7 @@
     "description": "",
     "main": "dist/index.js",
     "scripts": {
-        "test": "jest --coverage",
+        "test": "jest --coverage --runInBand",
         "lint": "./node_modules/.bin/eslint"
     },
     "keywords": [],

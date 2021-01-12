@@ -8,6 +8,12 @@ var fail_flag = false;
 
 describe("testing user db operations", () => {
     let current_inserted_users: User[] = [];
+    let current_num_of_users_in_database = 0;
+    beforeAll( async () => {
+        const current_users = await userDb.get([]);
+        current_num_of_users_in_database = current_users.length;
+    });
+
     beforeEach(async () => {
         console.log("Running on test " + t++);
         
@@ -39,7 +45,9 @@ describe("testing user db operations", () => {
         await userDb.insert(users[1]);
         await userDb.insert(users[2]);
 
-        let current_users = await userDb.get([]);
+        let current_users = await userDb.get([DATABASE.USER_ID_ENTRY, users[0].id]);
+        current_users.push((await userDb.get([DATABASE.USER_ID_ENTRY, users[1].id]))[0]);
+        current_users.push((await userDb.get([DATABASE.USER_ID_ENTRY, users[2].id]))[0]);
         let exist = false;
 
         expect(current_users.length).toBe(3);
@@ -47,7 +55,7 @@ describe("testing user db operations", () => {
         await userDb.delete(current_users[0]);
         await userDb.delete(current_users[1]);
 
-        current_users = await userDb.get([]);
+        current_users = await userDb.get([DATABASE.USER_ID_ENTRY, current_users[2].id]);
 
         for (let i = 0; i < users.length; i++) {
             if (current_users[0].id === users[i].id) {
@@ -63,7 +71,7 @@ describe("testing user db operations", () => {
 
         current_users = await userDb.get([]);
 
-        expect(current_users.length).toBe(0);
+        expect(current_users.length).toBe(current_num_of_users_in_database + 0);
     });
 
     it("Test all user operatons", async () => {
@@ -102,20 +110,20 @@ describe("testing user db operations", () => {
 
         current_users = await userDb.get([]);
         
-        expect(current_users.length).toBe(3);
+        expect(current_users.length).toBe(current_num_of_users_in_database + 3);
         
         await userDb.delete(current_users[0]);
         await userDb.delete(current_users[1]);
 
         current_users = await userDb.get([]);
 
-        expect(current_users.length).toBe(1);
+        expect(current_users.length).toBe(current_num_of_users_in_database + 1);
 
         await userDb.delete(current_users[0]);
 
         current_users = await userDb.get([]);
 
-        expect(current_users.length).toBe(0);
+        expect(current_users.length).toBe(current_num_of_users_in_database + 0);
     });
 
     afterEach(() => {
@@ -127,11 +135,9 @@ describe("testing user db operations", () => {
     afterAll(async () => {
         console.log("All tests done!!");
 
-        let current_users = await userDb.get([]);
-
-        if (current_users != null) {
-            for (let i = 0; i < current_users.length; i++) {
-                await userDb.delete(current_users[i]);
+        if (current_inserted_users != null) {
+            for (let i = 0; i < current_inserted_users.length; i++) {
+                await userDb.delete(current_inserted_users[i]);
             }
         }
     });

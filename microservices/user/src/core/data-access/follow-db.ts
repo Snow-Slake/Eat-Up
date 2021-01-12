@@ -6,6 +6,7 @@ import { FollowDb } from "../usecases";
 import { db } from "./admin";
 import { FollowDbException } from "./exception";
 import firebase from 'firebase'
+import { flattenDiagnosticMessageText } from "typescript";
 
 export default class makeFollowDb implements FollowDb {
     constructor(private _follow_exception: FollowDbException) {}
@@ -98,6 +99,10 @@ export default class makeFollowDb implements FollowDb {
     }
 
     async follow(follower_id: string, following_id: string): Promise<boolean> {
+        if(follower_id == following_id) {
+            return false;
+        }
+
         try {
             let conditions: string[] = [];
 
@@ -129,6 +134,10 @@ export default class makeFollowDb implements FollowDb {
     }
 
     async unfollow(follower_id: string, following_id: string): Promise<boolean> {
+        if(following_id == follower_id) {
+            return false;
+        }
+
         try {
             let conditions: string[] = [];
 
@@ -142,7 +151,6 @@ export default class makeFollowDb implements FollowDb {
             conditions.push(DATABASE.USER_ID_ENTRY);
             conditions.push(following_id);
             var second_user = await userDb.get(conditions)[0];
-            console.log(first_user, second_user);
             // decrementation for follows
             first_user.decrementFollowing();
             second_user.decrementFollowers();
