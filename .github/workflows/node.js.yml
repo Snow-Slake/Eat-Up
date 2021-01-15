@@ -26,7 +26,7 @@ jobs:
             - name: install dependencies
               run: |
                   npm install "microservices/user" --production=false
-                  cd "microservices/user" &&  npm install @typescript-eslint/eslint-plugin@latest --save-dev && npx eslint "./src/**.ts"
+                  cd "microservices/user" &&  npm install @typescript-eslint/eslint-plugin@latest --save-dev && npx eslint "./**.ts"
             - name: Tests
               run: |
                 npm install "microservices/user" --production=false
