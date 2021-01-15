@@ -1,13 +1,16 @@
-import { DATABASE } from "../../../config";
-import { User } from "../../entities/user";
 import { UserDb } from "./user-db-interface";
 
 export default function makeGetUser(userDb: UserDb) {
-    return async function getUser(id: string): Promise<Array<User>> {
-        let conditions = new Map<string, string>();
-        
-        conditions[DATABASE.USER_ID_ENTRY] = id;
+    return async function getUser(conditions: Array<string>): Promise<Array<any>> {
+        let users = await userDb.get(conditions);
+        let get_users = Array<any>();
 
-        return await userDb.get(conditions);
+        if (users != null && users != undefined) {
+            users.forEach((user) => {
+                get_users.push(user.toJson());
+            });
+        }
+
+        return get_users;
     };
 }

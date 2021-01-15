@@ -1,6 +1,5 @@
 //----------------------------------------File----------------------------------------------------//
-export const FILE_NAME = "/tmp/followers/follow-doc.json";
-export const SPACER = 2;
+export const FILE_NAME = __dirname + '/follow-doc.json';
 //----------------------------------------Validator-----------------------------------------------//
 export const EMAIL_VALIDATOR = [
     '@gmail.com',

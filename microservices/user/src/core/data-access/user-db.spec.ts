@@ -4,31 +4,33 @@ import { DATABASE } from "../../config";
 
 var t = 1;
 var fail_flag = false;
+var to_erase = Array<User>();
 
 describe("testing user db operations", () => {
+    jest.setTimeout(60000);
     beforeEach(async () => {
         console.log("Running on test " + t++);
         
         fail_flag = false;
-        let current_users = await userDb.get([]);
 
-        if (current_users != null) {
-            for (let i = 0; i < current_users.length; i++) {
-                await userDb.delete(current_users[i]);
-            }
+        for (let i = 0; i < to_erase.length; i++) {
+            await userDb.delete(to_erase[i]);
         }
+
+        to_erase = Array<User>();
     });
 
     it("Test insert user", async () => {
         let added = await userDb.insert(
             new User('1', "mo", "medo", "xx@gmail.com", "aaaa11AA", "xxx", "aaaa11AAy", 0, 0)
         );
+        to_erase.push(new User('1', "mo", "medo", "xx@gmail.com", "aaaa11AA", "xxx", "aaaa11AAy", 0, 0));
 
         expect(added).toBe(true);
     });
 
     it("Test insert, delete and get users", async () => {
-        let users = [];
+        let users = Array<User>();
 
         users.push(new User('1', "mo", "medo", "xx@gmail.com", "aaaa11AA", "xxx", "aaaa11AAy", 0, 0));
         users.push(new User('2', "mo", "medo", "xx@gmail.com", "aaaa11AA", "xxx", "aaaa11AAy", 0, 0));
@@ -66,8 +68,8 @@ describe("testing user db operations", () => {
     });
 
     it("Test all user operatons", async () => {
-        let users = [];
-        let IDs = [];
+        let users = Array<User>();
+        let IDs = Array<string>();
 
         IDs.push('1');
         IDs.push('2');
@@ -88,8 +90,8 @@ describe("testing user db operations", () => {
         await userDb.update(users[3]);
         await userDb.update(users[4]);
 
-        let current_users = [];
-        let conditions = [];
+        let current_users = Array<User>();
+        let conditions = Array<string>();
 
         conditions.push(DATABASE.USER_ID_ENTRY);
         conditions.push(users[3].id);
@@ -126,12 +128,8 @@ describe("testing user db operations", () => {
     afterAll(async () => {
         console.log("All tests done!!");
 
-        let current_users = await userDb.get([]);
-
-        if (current_users != null) {
-            for (let i = 0; i < current_users.length; i++) {
-                await userDb.delete(current_users[i]);
-            }
+        for (let i = 0; i < to_erase.length; i++) {
+            await userDb.delete(to_erase[i]);
         }
     });
 });

@@ -20,10 +20,7 @@ export default class makeUserDb implements UserDb {
 
     async update(user: User): Promise<boolean> {
         try {
-            await db
-                .collection(DATABASE.USER_COLLECTION_ENTRY)
-                .doc(user.id)
-                .update(user.toJson());
+            await db.collection(DATABASE.USER_COLLECTION_ENTRY).doc(user.id).update(user.toJson());
             return true;
         } catch (exception) {
             this._user_Exception.updateUserDbException(exception);
@@ -50,7 +47,8 @@ export default class makeUserDb implements UserDb {
             }
             var doc = await collection.get();
 
-            var users = [];
+            var users = Array<User>();
+
             for (let i = 0; i < doc.docs.length; i++) {
                 let user = doc.docs[i].data();
                 users.push(
@@ -62,16 +60,17 @@ export default class makeUserDb implements UserDb {
                         email: user[DATABASE.USER_EMAIL_ENTRY],
                         coverImageUrl: user[DATABASE.USER_COVER_IMAGE_ENTRY],
                         profileImageUrl: user[DATABASE.USER_PROFILE_IMAGE_ENTRY],
-                        numOfFollowers: user[DATABASE.USER_FOLLOWER_ENTRY],
-                        numOfFollowing: user[DATABASE.USER_FOLLOWING_ENTRY],
+                        numOfFollowers: Number.parseInt(user[DATABASE.USER_FOLLOWER_ENTRY]),
+                        numOfFollowing: Number.parseInt(user[DATABASE.USER_FOLLOWING_ENTRY]),
                     })
                 );
             }
+            
             return users;
         } catch (exception) {
             this._user_Exception.getUserDbException(exception);
         }
-        return null;
+        return null as any;
     }
 
     private _getCollection(

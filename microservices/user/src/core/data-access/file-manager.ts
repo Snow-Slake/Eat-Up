@@ -1,5 +1,5 @@
 import { FileManager } from "../usecases";
-import * as fs from "fs";
+import editJsonFile from 'edit-json-file';
 import { LOCAL } from "../../config";
 import { FileException } from "./exception";
 
@@ -8,9 +8,10 @@ export default class makeFileManager implements FileManager {
 
     async insert(key: string, value: string): Promise<boolean> {
         try {
-            let data = await this._loadData();
-            data[key] = value;
-            fs.writeFileSync(LOCAL.FILE_NAME, JSON.stringify(data, null, LOCAL.SPACER));
+            let file = editJsonFile(LOCAL.FILE_NAME, {
+                autosave: true
+            });
+            file.set(key, value);
             return true;
         } catch (exception) {
             this._file_exception.insertFileException(exception);
@@ -20,10 +21,10 @@ export default class makeFileManager implements FileManager {
 
     async delete(key: string): Promise<boolean> {
         try {
-            let data = await this._loadData();
-            if (data.has(key)) {
-                data.delete(key);
-            }
+            let file = editJsonFile(LOCAL.FILE_NAME, {
+                autosave: true
+            });
+            file.unset(key);
             return true;
         } catch (exception) {
             this._file_exception.deleteFileException(exception);
@@ -33,23 +34,11 @@ export default class makeFileManager implements FileManager {
 
     async get(key: string): Promise<string> {
         try {
-            let data = await this._loadData();
-            return data.has(key) ? data[key] : null;
+            let file = editJsonFile(LOCAL.FILE_NAME);
+            return file.get(key);
         } catch (exception) {
             this._file_exception.getFileException(exception);
         }
-        return null;
-    }
-
-    private async _loadData(): Promise<Map<string, string>> {
-        try {
-            var data = JSON.parse(
-                fs.existsSync(LOCAL.FILE_NAME) ? fs.readFileSync(LOCAL.FILE_NAME).toString() : '""'
-            );
-            return data;
-        } catch (exception) {
-            this._file_exception.loadFileException(exception);
-        }
-        return null;
+        return null as any;
     }
 }

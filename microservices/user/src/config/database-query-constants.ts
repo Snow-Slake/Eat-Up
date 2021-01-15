@@ -1,3 +1,3 @@
 export const EQUAL = "==";
-export const ASC = 'asc';
+export const DESC = 'desc';
 export const LIMITS = 10;
