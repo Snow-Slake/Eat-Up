@@ -1,5 +1,5 @@
 //----------------------------------------File----------------------------------------------------//
-export const FILE_NAME = "microservices/user/src/config/follow-doc.json";
+export const FILE_NAME = __dirname + '/follow-doc.json';
 //----------------------------------------Validator-----------------------------------------------//
 export const EMAIL_VALIDATOR = [
     '@gmail.com',
@@ -16,6 +16,3 @@ export const PASSWORD_VALIDATOR = {
     'lowercase': 4,
     'number': 2,
 };
-//----------------------------------------Apis---------------------------------------------------//
-export const LOCAL_API = "";
-export const CLOUD_API = "";
