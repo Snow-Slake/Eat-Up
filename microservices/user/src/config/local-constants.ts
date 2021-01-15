@@ -1,6 +1,5 @@
 //----------------------------------------File----------------------------------------------------//
 export const FILE_NAME = "microservices/user/src/config/follow-doc.json";
-export const SPACER = 2;
 //----------------------------------------Validator-----------------------------------------------//
 export const EMAIL_VALIDATOR = [
     '@gmail.com',
