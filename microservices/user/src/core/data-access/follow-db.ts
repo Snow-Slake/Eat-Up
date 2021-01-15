@@ -1,6 +1,5 @@
 import { fileManager, userDb } from ".";
 import { DATABASE, DB_OPERATION } from "../../config";
-import { makeUser } from "../entities";
 import { User } from "../entities/user";
 import { FollowDb } from "../usecases";
 import { db } from "./admin";
@@ -11,10 +10,11 @@ export default class makeFollowDb implements FollowDb {
 
     async insert(first_id: string, second_id: string): Promise<boolean> {
         try {
-            let data = new Map<string, string>();
+            let data = {};
 
             data[DATABASE.FOLLOW_USER_ID_ENTRY] = first_id;
             data[DATABASE.FOLLOW_FOLLOWING_ID_ENTRY] = second_id;
+            data[DATABASE.FOLLOW_DATE_ENTRY] = Date.now();
 
             await db
                 .collection(DATABASE.FOLLOW_COLLECTION_ENTRY)
@@ -31,11 +31,6 @@ export default class makeFollowDb implements FollowDb {
 
     async delete(first_id: string, second_id: string): Promise<boolean> {
         try {
-            let data = new Map<string, string>();
-
-            data[DATABASE.FOLLOW_USER_ID_ENTRY] = first_id;
-            data[DATABASE.FOLLOW_FOLLOWING_ID_ENTRY] = second_id;
-
             await db
                 .collection(DATABASE.FOLLOW_COLLECTION_ENTRY)
                 .doc(first_id)
@@ -52,52 +47,48 @@ export default class makeFollowDb implements FollowDb {
     async get(id: string): Promise<Array<User>> {
         try {
             // Read doc from file
-            var last_id = await fileManager.get(id);
+            let last_id = await fileManager.get(id);
 
             // Fetching data
-            var data = db
+            let data = db
                 .collection(DATABASE.FOLLOW_COLLECTION_ENTRY)
                 .doc(id)
                 .collection(DATABASE.FOLLOW_USER_COLLECTION_ENTRY)
-                .orderBy(DATABASE.FOLLOW_FOLLOWING_ID_ENTRY, DB_OPERATION.ASC);
+                .orderBy(DATABASE.FOLLOW_DATE_ENTRY, DB_OPERATION.DESC);
 
             // Getting last doc
-            if (last_id != null) {
+            if (last_id != null && last_id != undefined) {
                 let last_doc = await this._getLastDoc(id, last_id);
-                data = data.startAfter(last_doc);
+                data = data.startAfter(last_doc.docs[0]);
             }
 
             // Continue fetching
-            var doc = await data.limit(DB_OPERATION.LIMITS).get();
+            let doc = await db
+            .collection(DATABASE.FOLLOW_COLLECTION_ENTRY)
+            .doc(id)
+            .collection(DATABASE.FOLLOW_USER_COLLECTION_ENTRY).limit(DB_OPERATION.LIMITS).get();
 
             // Parsing docs
-            var users = [];
+            let users = Array<User>();
+            let conditions = Array<string>();
 
-            doc.docs.forEach((user) => {
-                users.push(
-                    makeUser({
-                        id: user[DATABASE.USER_ID_ENTRY],
-                        firstName: user[DATABASE.USER_FIRST_NAME_ENTRY],
-                        lastName: user[DATABASE.USER_LAST_NAME_ENTRY],
-                        password: user[DATABASE.USER_PASSWORD_ENTRY],
-                        email: user[DATABASE.USER_EMAIL_ENTRY],
-                        coverImageUrl: user[DATABASE.USER_COVER_IMAGE_ENTRY],
-                        profileImageUrl: user[DATABASE.USER_PROFILE_IMAGE_ENTRY],
-                        numOfFollowers: user[DATABASE.USER_FOLLOWER_ENTRY],
-                        numOfFollowing: user[DATABASE.USER_FOLLOWING_ENTRY],
-                    })
-                );
-            });
+            for (let i = 0; i < doc.docs.length; i++) {
+                conditions = Array<string>();
+                conditions.push(DATABASE.USER_ID_ENTRY);
+                conditions.push(doc.docs[i].data()[DATABASE.FOLLOW_FOLLOWING_ID_ENTRY]);
+                let value = (await userDb.get(conditions))[0];
+                users.push(value);
+            }
 
             // Update last document
-            await fileManager.insert(id, users[users.length - 1]);
+            await fileManager.insert(id, users[users.length - 1].id);
 
             // Return data
             return users;
         } catch (exception) {
             this._follow_exception.getFollowDbException(exception);
         }
-        return null;
+        return null as any;
     }
 
     async clear(id: string): Promise<boolean> {
@@ -113,12 +104,16 @@ export default class makeFollowDb implements FollowDb {
 
     async follow(follower_id: string, following_id: string): Promise<boolean> {
         try {
-            let conditions = [];
+            if (follower_id == following_id) {
+                return false;
+            }
+
+            let conditions = Array<string>();
 
             // fetching first user
             conditions.push(DATABASE.USER_ID_ENTRY);
             conditions.push(follower_id);
-            var first_user = await userDb.get(conditions)[0];
+            let first_user = (await userDb.get(conditions))[0];
 
             // clear list
             conditions.pop();
@@ -127,7 +122,7 @@ export default class makeFollowDb implements FollowDb {
             // fetching second user
             conditions.push(DATABASE.USER_ID_ENTRY);
             conditions.push(following_id);
-            var second_user = await userDb.get(conditions)[0];
+            let second_user = (await userDb.get(conditions))[0];
 
             // incrementation for follows
             first_user.incrementFollowing();
@@ -148,13 +143,17 @@ export default class makeFollowDb implements FollowDb {
 
     async unfollow(follower_id: string, following_id: string): Promise<boolean> {
         try {
-            let conditions = [];
+            if (follower_id == following_id) {
+                return false;
+            }
+
+            let conditions = Array<string>();
 
             // fetching first user
             conditions.push(DATABASE.USER_ID_ENTRY);
             conditions.push(follower_id);
-            var first_user = await userDb.get(conditions)[0];
-            
+            let first_user = await userDb.get(conditions)[0];
+
             // clear list
             conditions.pop();
             conditions.pop();
@@ -162,7 +161,7 @@ export default class makeFollowDb implements FollowDb {
             // fetching second user
             conditions.push(DATABASE.USER_ID_ENTRY);
             conditions.push(follower_id);
-            var second_user = await userDb.get(conditions)[0];
+            let second_user = await userDb.get(conditions)[0];
 
             // decrementation for follows
             first_user.decrementFollowing();
@@ -186,15 +185,17 @@ export default class makeFollowDb implements FollowDb {
         following_id: string
     ): Promise<firebase.default.firestore.QuerySnapshot<firebase.default.firestore.DocumentData>> {
         try {
-            return await db
-                .collection(DATABASE.FOLLOW_COLLECTION_ENTRY)
-                .doc(user_id)
-                .collection(DATABASE.FOLLOW_USER_COLLECTION_ENTRY)
-                .orderBy(DATABASE.FOLLOW_FOLLOWING_ID_ENTRY, DB_OPERATION.ASC)
-                .where(DATABASE.FOLLOW_FOLLOWING_ID_ENTRY, DB_OPERATION.EQUAL, following_id)
-                .get();
+            let doc = await db
+            .collection(DATABASE.FOLLOW_COLLECTION_ENTRY)
+            .doc(user_id)
+            .collection(DATABASE.FOLLOW_USER_COLLECTION_ENTRY)
+            .orderBy(DATABASE.FOLLOW_DATE_ENTRY, DB_OPERATION.DESC)
+            .where(DATABASE.FOLLOW_FOLLOWING_ID_ENTRY, DB_OPERATION.EQUAL, following_id)
+            .get();
+            return doc;
         } catch (exception) {
             this._follow_exception.getLastDocException(exception);
         }
+        return null as any;
     }
 }

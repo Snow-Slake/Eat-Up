@@ -15,3 +15,4 @@ export const FOLLOW_COLLECTION_ENTRY: string = "FOLLOW_COLLECTION";
 export const FOLLOW_USER_COLLECTION_ENTRY: string = "FOLLOW_USER_COLLECTION";
 export const FOLLOW_USER_ID_ENTRY: string = "USER_ID";
 export const FOLLOW_FOLLOWING_ID_ENTRY: string = "FOLLOWING_ID";
+export const FOLLOW_DATE_ENTRY: string = "DATE";
