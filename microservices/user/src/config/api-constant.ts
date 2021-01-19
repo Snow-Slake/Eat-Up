@@ -10,6 +10,11 @@ export const unfollowUserAPI = "MSOXSA549SA9kgj8415opoyiqwqere88484FE61sadASDa89
 export const getFollowAPI = "MSOXSA549SA987DAS2222dsfs222261sadASDa89s4dasSDA6";
 export const clearFollowAPI = "MSOXSA549SA987DAS58888888asd8das88AAAA888adASDa89s4dasSDA6";
 
+//------------------------------------------Token API key----------------------------------//
+export const generateTokensAPI = "MSOXSA549SAasdch999jkhg1510000kgjh311A5SD9484FE61sadASDa89s4dasSDA6";
+export const refreshTokensAPI = "MSOXSA549SA9kgj8415opoyasdas5498re88484FE61sadASDa89s4dasSDA6";
+export const verifyTokensAPI = "MSOXSA549SA987DAS2222dsfs222kdosafas165dASDa89s4dasSDA6";
+
 //-----------------------------------------API configration--------------------------------//
 export const api_headers = { "content-type": "application/json" };
 export const api_code_success = 200;
