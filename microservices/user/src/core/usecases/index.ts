@@ -12,6 +12,9 @@ import makeUnfollow from "./follow/unfollow-user";
 import makeAddFile from "./file/insert-doc";
 import makeDeleteFile from "./file/delete-doc";
 import makeGetFile from "./file/get-doc";
+import makeGenerateTokens from "./user-tokens/generate-token";
+import makeRefreshTokens from "./user-tokens/refresh-token";
+import makeVerifyTokens from "./user-tokens/verify-token";
 
 //---------------------------------Interfaces---------------------------------------//
 export { UserDb } from "./user/user-db-interface";
@@ -35,3 +38,8 @@ export const unFollow = makeUnfollow(followDb);
 export const addFile = makeAddFile(fileManager);
 export const deleteFile = makeDeleteFile(fileManager);
 export const getFile = makeGetFile(fileManager);
+
+//---------------------------------Token Factory Call--------------------------------//
+export const generateTokens = makeGenerateTokens();
+export const refreshTokens = makeRefreshTokens();
+export const verifyTokens = makeVerifyTokens();

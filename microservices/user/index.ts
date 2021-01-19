@@ -9,6 +9,9 @@ import {
     unfollowController,
     getFollowController,
     clearFollowDocController,
+    generateTokenController,
+    refreshTokenController,
+    verifyTokenController,
 } from "./src/controller";
 import { makeExpressCallback } from "./src/express-callback";
 import { API_ROOT } from "./src/config";
@@ -29,6 +32,11 @@ app.post(API_ROOT.followUserAPI, makeExpressCallback({ followController }));
 app.post(API_ROOT.unfollowUserAPI, makeExpressCallback({ unfollowController }));
 app.post(API_ROOT.getFollowAPI, makeExpressCallback({ getFollowController }));
 app.post(API_ROOT.clearFollowAPI, makeExpressCallback({ clearFollowDocController }));
+
+//-----------------------------------------Token callback--------------------------------------//
+app.post(API_ROOT.generateTokensAPI, makeExpressCallback({ generateTokenController }));
+app.post(API_ROOT.refreshTokensAPI, makeExpressCallback({ refreshTokenController }));
+app.post(API_ROOT.verifyTokensAPI, makeExpressCallback({ verifyTokenController }));
 
 // listen for requests
 app.listen(port, () => {

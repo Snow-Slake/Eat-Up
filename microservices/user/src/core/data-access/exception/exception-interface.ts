@@ -21,3 +21,9 @@ export interface FileException {
     getFileException(exception: string): void;
     loadFileException(exception: string): void;
 }
+
+export interface TokenException {
+    generateTokensException(exception: string): void;
+    refreshTokensException(exception: string): void;
+    verifyTokensException(exception: string): void;
+}

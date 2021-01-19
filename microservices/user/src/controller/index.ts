@@ -7,13 +7,20 @@ import {
     unFollow,
     getFollow,
     clearFollow,
+    generateTokens,
+    refreshTokens,
+    verifyTokens,
 } from "../core/usecases";
 import { IUserControllerException } from "./exception/follow-controller-exception-imp";
+import ITokenControllerException from "./exception/token-controller-exception";
 import { IFollowControllerException } from "./exception/user-controller-exception-imp";
 import makeClearFollowDocController from "./follow/clear-follow-doc";
 import makeFollowController from "./follow/follow";
 import makeGetFollowController from "./follow/get-follow";
 import makeUnfollowController from "./follow/unfollow";
+import makeGenerateTokensController from "./user-token/generate-token-controller";
+import makerefreshTokensController from "./user-token/refresh-token-controller";
+import makeverifyTokenController from "./user-token/verify-token-controller";
 import makeAddUserController from "./user/add-user";
 import makeDeleteUserController from "./user/delete-user";
 import makeGetUserController from "./user/get-user";
@@ -41,3 +48,15 @@ export const clearFollowDocController = makeClearFollowDocController(
     new IFollowControllerException(),
     { clearFollow }
 );
+
+//-------------------------------------------token controller--------------------------------//
+export const generateTokenController = makeGenerateTokensController(
+    new ITokenControllerException(),
+    { generateTokens }
+);
+export const refreshTokenController = makerefreshTokensController(new ITokenControllerException(), {
+    refreshTokens,
+});
+export const verifyTokenController = makeverifyTokenController(new ITokenControllerException(), {
+    verifyTokens,
+});

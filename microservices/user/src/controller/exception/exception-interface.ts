@@ -11,3 +11,9 @@ export interface FollowControllerException {
     getFollowControllerException(exception: string): void;
     clearFollowDocControllerException(exception: string): void;
 }
+
+export interface TokenControllerException {
+    generateTokenControllerException(exception: string): void;
+    refreshTokenControllerException(exception: string): void;
+    verifyTokenControllerException(exception: string): void;
+}
