@@ -19,7 +19,8 @@ export class Fridge {
         return this.__ingredients ? new Map(this.__ingredients) : undefined;
     }
 
-    public updateIngredient(name: string, capacity: number, unit: string) {
+    // methods that start with "_" are only allowed to be used in package scope
+    public _updateIngredient(name: string, capacity: number, unit: string) {
         this.__ingredients[name] = { capacity, unit };
     }
 

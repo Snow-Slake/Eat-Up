@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "start": "nodemon index.ts",
-    "test": "jest --coverage --runInBand",
+    "test": "jest --coverage",
     "lint": "./node_modules/.bin/eslint"
   },
   "author": "",
