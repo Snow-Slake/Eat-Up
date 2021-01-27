@@ -1,6 +1,6 @@
 import fs from "fs";
 import { ImageManager } from "../usecases/image/image-interface";
-import { bucket, storage } from "./admin";
+import { bucket } from "./admin";
 import { ImageException } from "./exception/exception-interface";
 import * as uuid from "uuid";
 import { DB_CONFIG } from "../../config";

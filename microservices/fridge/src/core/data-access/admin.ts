@@ -10,5 +10,4 @@ admin.initializeApp({
 });
 
 export const db = firebase.firestore();
-export const storage = firebase.storage();
 export const bucket = admin.storage().bucket();
