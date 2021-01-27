@@ -40,14 +40,14 @@ export default class makeUserDb implements UserDb {
 
     async get(conditions: Array<string>): Promise<Array<User>> {
         try {
-            var collection = this._getCollection(DATABASE.USER_COLLECTION_ENTRY);
+            let collection = this._getCollection(DATABASE.USER_COLLECTION_ENTRY);
 
             for (let i = 0; i < conditions.length; i += 2) {
                 collection = collection.where(conditions[i], DB_OPERATION.EQUAL, conditions[i + 1]);
             }
-            var doc = await collection.get();
+            let doc = await collection.get();
 
-            var users = Array<User>();
+            let users = Array<User>();
 
             for (let i = 0; i < doc.docs.length; i++) {
                 let user = doc.docs[i].data();

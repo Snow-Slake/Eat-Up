@@ -1,4 +1,8 @@
-const serviceAccountKey = require('./serviceAccountKey.json');
+export const serviceAccountKey = require('./serviceAccountKey.json');
+export const bucketName = 'eat-up-e24f9.appspot.com';
+export const bucketUrl = 'gs://eat-up-e24f9.appspot.com/';
+export const read = 'read';
+export const expiration = '03-09-10000';
 
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 export const firebaseConfig = {
