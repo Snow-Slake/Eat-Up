@@ -1,3 +1,5 @@
+import { DATABASE } from "../../config";
+
 export class Fridge {
     private __id: string; // fridge_id which is user id
     private __ingredients: Map<string, { capacity: number; unit: string }>;
@@ -16,7 +18,7 @@ export class Fridge {
     }
 
     get ingredients(): Map<string, { capacity: number; unit: string }> | undefined {
-        return this.__ingredients ? new Map(this.__ingredients) : undefined;
+        return this.__ingredients ? this.__ingredients : undefined;
     }
 
     // methods that start with "_" are only allowed to be used in package scope
@@ -28,13 +30,23 @@ export class Fridge {
         return this.__ingredients.delete(name);
     }
 
-    public toJson(): {
-        id: string;
-        ingredients: Map<string, { capacity: number; unit: string }> | undefined;
-    } {
-        return {
-            id: this.id,
-            ingredients: this.ingredients,
-        };
+    toJson = () => {
+        let fridge = {};
+        let ingredient = {};
+
+        if (this.ingredients === undefined) {
+            return {};
+        }
+
+        this.ingredients.forEach((value, key) => {
+            ingredient[key] = {
+                capacity: value.capacity,
+                unit: value.unit,
+            };
+        });
+
+        fridge[DATABASE.FRIDGE_ID_ENTRY] = this.id;
+        fridge[DATABASE.FRIDGE_INGREDIENT_ENTRY] = ingredient;
+        return fridge;
     }
 }

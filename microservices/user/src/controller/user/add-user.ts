@@ -1,5 +1,6 @@
 import { API_ROOT } from "../../config";
 import { UserControllerException } from "../exception/exception-interface";
+import * as uuid from "uuid";
 
 export default function makeAddUserController(
     UserControllerException: UserControllerException,
@@ -8,7 +9,7 @@ export default function makeAddUserController(
     return async function addUserController(request) {
         try {
             let add_user = await addUser(
-                request.body.id,
+                uuid.v4(),
                 request.body.firstName,
                 request.body.lastName,
                 request.body.email,

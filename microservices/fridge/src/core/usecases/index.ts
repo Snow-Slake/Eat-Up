@@ -1,5 +1,5 @@
 import { imageManager } from "../data-access";
-import makeImageUploader from "./image/upload-image";
+import makeImageUploader from "./image/upload-public-image";
 import { buildAddFridge, buildDeleteFridge, buildGetFridge, buildUpdateFridge } from './fridge'
 
 export const imageUploader = makeImageUploader(imageManager);

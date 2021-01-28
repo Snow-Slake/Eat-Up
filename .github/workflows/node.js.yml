@@ -23,11 +23,19 @@ jobs:
               run: |
                   npm uninstall typescript --no-save
                   npm uninstall tslint --no-save
-            - name: install dependencies
+            - name: install user dependencies
               run: |
                   npm install "microservices/user" --production=false
                   cd "microservices/user" &&  npm install @typescript-eslint/eslint-plugin@latest --save-dev && npx eslint "./**.ts"
-            - name: Tests
+            - name: User tests
               run: |
                 npm install "microservices/user" --production=false
                 cd "microservices/user/src/core/data-access" && npm test
+            - name: install fridge dependencies
+              run: |
+                  npm install "microservices/fridge" --production=false
+                  cd "microservices/fridge" &&  npm install @typescript-eslint/eslint-plugin@latest --save-dev && npx eslint "./**.ts"
+            - name: Fridge tests
+              run: |
+                npm install "microservices/fridge" --production=false
+                cd "microservices/fridge/src/core/data-access" && npm test

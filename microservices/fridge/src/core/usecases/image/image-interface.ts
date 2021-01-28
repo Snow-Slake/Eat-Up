@@ -1,4 +1,6 @@
 export interface ImageManager {
-    upload(path: string, file: File): Promise<string>;
-    delete(path: string): Promise<boolean>;
+    uploadPublicFile(path: string, destination: string): Promise<string>;
+    uploadPrivateFile(path: string, destination: string): Promise<string>;
+    delete(destination: string): Promise<boolean>;
+    clearLocalFile(path: string): Promise<void>;
 }
