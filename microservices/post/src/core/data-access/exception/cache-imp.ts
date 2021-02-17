@@ -1,6 +1,6 @@
-import CacheExceptionManager from "./exception-interface";
+import { CacheExceptionManager } from "./exception-interface";
 
-export default class ICacheExceptionManager implements CacheExceptionManager {
+export class ICacheExceptionManager implements CacheExceptionManager {
     setExceptionHandler(exception: string) : void {
         console.log('set data in cache throw exception: ' + exception);
     }

@@ -31,7 +31,7 @@ app.post(REQ_PUBLIC_FILE_UPLOADER, makeExpressCallback({ uploadFileController })
 app.post(REQ_FILE_REMOVAL, makeExpressCallback({ deleteFileController }));
 
 // listen for requests
-const port = process.env.port || 4000;
+const port = process.env.port || 5000;
 app.listen(port, () => {
     console.log("Server is listening on port " + port);
 });

@@ -3,7 +3,7 @@ import { json } from "body-parser";
 
 import redis from "redis";
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 6000;
 const app = express();
 
 const redisClient = redis.createClient({
@@ -15,7 +15,7 @@ const redisClient = redis.createClient({
 app.use(json());
 
 ////////////////////////////////////////////////////////
-app.get("/", (req, res) => {
+app.post("/", (req, res) => {
     console.log(req);
     const key = req.body["key"];
     try {

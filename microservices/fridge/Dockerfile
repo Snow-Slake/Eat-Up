@@ -9,6 +9,6 @@ RUN npm install --production=false
 COPY . .
 RUN tsc index.ts
 
-EXPOSE 4000
+EXPOSE 5000
 
 CMD ["npm", "start"]

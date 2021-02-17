@@ -1,15 +1,14 @@
 import { cache_server } from "../../config";
 import CacheManager from "../usecases/cache/cache-interface";
 import { CacheExceptionManager } from "./exception";
+import fetch from 'node-fetch';
 
 export default class ICacheManager implements CacheManager {
-    constructor (
-        private _cache_exception_manager: CacheExceptionManager,
-    ) {}
-    async set(key: string, value: JSON): Promise<boolean> {
+    constructor(private _cache_exception_manager: CacheExceptionManager) {}
+    async set(key: string, value: any): Promise<boolean> {
         try {
             await fetch(cache_server, {
-                method: "put",
+                method: "PUT",
                 headers: { "content-type": "application/json" },
                 body: JSON.stringify({
                     key: key,
@@ -22,21 +21,19 @@ export default class ICacheManager implements CacheManager {
         }
         return false;
     }
-    get(key: string): Promise<JSON> {
+    async get(key: string): Promise<any> {
         try {
-            fetch(cache_server, {
-                method: "get",
+            let response = await fetch(cache_server, {
+                method: "POST",
                 headers: { "content-type": "application/json" },
                 body: JSON.stringify({
-                    key: key,
+                    key: key
                 }),
-            }).then((res) => {
-                res.json().then(async (data) => {
-                    if (data.value.length > 0) {
-                        return data.value;
-                    }
-                });
             });
+            let res = await response
+            .json();
+
+            return res.value;
         } catch (exception) {
             this._cache_exception_manager.getExceptionHandler(exception);
         }

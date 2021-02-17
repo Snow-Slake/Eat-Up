@@ -1,6 +1,6 @@
 FROM node:12.10.0-alpine
 
-WORKDIR /SnowFlake/microservices/fridge
+WORKDIR /SnowFlake/microservices/post
 
 COPY package*.json ./
 RUN npm ci -qy
