@@ -1,0 +1,1 @@
+export const cache_server = 'https://eat-up-cache.herokuapp.com/';

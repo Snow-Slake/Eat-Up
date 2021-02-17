@@ -11,6 +11,6 @@ RUN npm install --production=false
 
 COPY . .
 
-EXPOSE 3000
+EXPOSE 6000
 
 CMD redis-server & npx ts-node index.ts
