@@ -2,10 +2,10 @@ import { postDb } from './index';
 import { makePost } from '../entities';
 import * as uuid from 'uuid';
 import { log } from 'console';
-import { PostDb } from './post-db';
 
 describe("testing creatring, deleting, updating posts", () => {
     const createdPostsId: string[] = [];
+    jest.setTimeout(10000);
     it("testeing creating post without content", async () => {
         const userId = uuid.v4();
         const post = makePost(userId, userId, "post gamed gdn", ["tag1", "tag2"], [], "", 0);

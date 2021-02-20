@@ -1,5 +1,5 @@
 import { Post } from "../entities/post";
-import { IPostDb } from "./ipost-db";
+import { IPostDb } from "../usecases/post/post-interface";
 import { db } from './admin'
 import { DB } from '../../config'
 import { cache_manager } from ".";

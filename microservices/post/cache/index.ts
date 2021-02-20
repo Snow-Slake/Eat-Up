@@ -42,6 +42,13 @@ app.put("/", (req, res) => {
     redisClient.set(key, JSON.stringify(value));
     res.send();
 });
+
+app.put("/delete", (req, res) => {
+    console.log(req);
+    const key = req.body["key"];
+    redisClient.del(key);
+    res.send();
+});
 ///////////////////////////////////////////////////////
 app.listen(PORT, () => {
     console.log(`app is listening on port ${PORT}`);
