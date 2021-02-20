@@ -39,3 +39,7 @@ jobs:
               run: |
                 npm install "microservices/fridge" --production=false
                 cd "microservices/fridge/src/core/data-access" && npm test
+            - name: Post tests
+              run: |
+                npm install "microservices/post" --production=false
+                cd "microservices/post/src/core/data-access" && npm test

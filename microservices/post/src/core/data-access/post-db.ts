@@ -19,6 +19,7 @@ export class PostDb implements IPostDb {
             }
 
             await batch.commit();
+            await cache_manager.set(post.id, post);
             return true
         }
         catch(err) {
@@ -40,7 +41,7 @@ export class PostDb implements IPostDb {
             }
 
             await batch.commit();
-            cache_manager.set(post.id, post);
+            await cache_manager.set(post.id, post);
             return true
         }
         catch(err) {
@@ -58,7 +59,7 @@ export class PostDb implements IPostDb {
             batch.delete(postContentRef)
 
             await batch.commit();
-            cache_manager.set(postId, null);
+            await cache_manager.del(postId);
             return true
         }
         catch(err) {
@@ -68,6 +69,7 @@ export class PostDb implements IPostDb {
 
     private getPostWithoutContent(post: Post) {
         return {
+            id: post.id,
             userId: post.userId,
             createdAt: post.createdAt,
             tags: post.tags,

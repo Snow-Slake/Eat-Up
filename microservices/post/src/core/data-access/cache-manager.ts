@@ -3,13 +3,12 @@ import CacheManager from "../usecases/cache/cache-interface";
 import { CacheExceptionManager } from "./exception";
 import fetch from "node-fetch";
 import { Post } from "../entities/post";
-import { makePost } from "../entities";
 
 export default class ICacheManager implements CacheManager {
     constructor(private _cache_exception_manager: CacheExceptionManager) {}
     async set(key: string, value: Post): Promise<boolean> {
         try {
-            await fetch(cache_server, {
+            let response = await fetch(cache_server, {
                 method: "PUT",
                 headers: { "content-type": "application/json" },
                 body: JSON.stringify({
@@ -17,6 +16,12 @@ export default class ICacheManager implements CacheManager {
                     value: this.toJson(value),
                 }),
             });
+            let res = await response.json();
+            
+            if (response.status == 500) {
+                this._cache_exception_manager.setExceptionHandler(res.message);
+                return false;
+            }
             return true;
         } catch (exception) {
             this._cache_exception_manager.setExceptionHandler(exception);
@@ -25,13 +30,19 @@ export default class ICacheManager implements CacheManager {
     }
     async del(key: string): Promise<boolean> {
         try {
-            await fetch(cache_server + delete_ref, {
+            let response = await fetch(cache_server + delete_ref, {
                 method: "PUT",
                 headers: { "content-type": "application/json" },
                 body: JSON.stringify({
                     key: key,
                 }),
             });
+            let res = await response.json();
+            
+            if (response.status == 500) {
+                this._cache_exception_manager.delExceptionHandler(res.message);
+                return false;
+            }
             return true;
         } catch (exception) {
             this._cache_exception_manager.delExceptionHandler(exception);
@@ -50,7 +61,10 @@ export default class ICacheManager implements CacheManager {
             let res = await response.json();
 
             if (res.value != null) {
-                this.fromJson(res.value);
+                return this.fromJson(res.value);
+            }
+            if (response.status == 500) {
+                this._cache_exception_manager.getExceptionHandler(res.message);
             }
             return null as any;
         } catch (exception) {
@@ -61,8 +75,9 @@ export default class ICacheManager implements CacheManager {
 
     private toJson(post: Post) {
         return {
+            id: post.id,
             userId: post.userId,
-            createdAt: post.createdAt,
+            createdAt: post.createdAt.toString(),
             tags: post.tags,
             imagesLinks: post.imagesLinks,
             videoLink: post.videoLink,
@@ -80,15 +95,17 @@ export default class ICacheManager implements CacheManager {
     }
 
     private fromJson(post: any): Post {
-        let current_post = makePost(
+        const current_post = new Post(
             post.id,
             post.userId,
             post.description,
+            new Date(post.createdAt),
             post.tags,
             post.imagesLinks,
             post.videoLink,
             post.price,
-            post.postContent
+            post.reacts,
+            post.postContent ? post.postContent : {}
         );
 
         return current_post;

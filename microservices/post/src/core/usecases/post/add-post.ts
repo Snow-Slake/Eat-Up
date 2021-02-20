@@ -1,8 +1,7 @@
 import { makePost } from "../../entities";
-import CacheManager from "../cache/cache-interface";
 import { IPostDb } from "./post-interface";
 
-export default function makeAddPost(post_db: IPostDb, cache: CacheManager) {
+export default function makeAddPost(post_db: IPostDb) {
     return async function addPost(
         id: string,
         userId: string,
@@ -29,8 +28,6 @@ export default function makeAddPost(post_db: IPostDb, cache: CacheManager) {
                 steps,
             }
         );
-
-        await cache.set(id, current_post);
 
         return await post_db.addPost(current_post);
     };
