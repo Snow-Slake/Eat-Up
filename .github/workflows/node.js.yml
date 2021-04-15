@@ -42,7 +42,7 @@ jobs:
             - name: install post dependencies
               run: |
                   npm install "microservices/post" --production=false
-                  cd "microservices/post" &&  npm install @typescript-eslint/eslint-plugin@latest --save-dev && npx eslint "./**.ts"
+                  cd "microservices/post" &&  npm install @typescript-eslint/eslint-plugin@latest --save-dev
             - name: Post tests
               run: |
                 npm install "microservices/post" --production=false
