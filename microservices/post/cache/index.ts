@@ -18,14 +18,14 @@ cron.schedule('25 * * * *', function () {
 });
 
 app.post("/", (req, res) => {
-    const key = req.body["key"];
+    const key = req.body.key;
     try {
         redisClient.get(key, async (err, val) => {
             if (err) throw err;
 
             res.setHeader("Content-Type", "application/json");
             if (!val) {
-                res.status(200).send({ value: null });
+                res.status(404).send({ value: null });
             } else {
                 const value = JSON.parse(val);
                 res.status(200).send({ value });
@@ -49,7 +49,7 @@ app.put("/", (req, res) => {
 
 app.put("/delete", (req, res) => {
     try {
-        const key = req.body["key"];
+        const key = req.body.key;
         redisClient.del(key);
         res.status(200).send({});
     } catch (err) {
