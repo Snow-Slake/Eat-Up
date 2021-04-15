@@ -2,7 +2,7 @@ import { cache_manager } from ".";
 import { makePost } from "../entities";
 
 describe("Testing cache connection", () => {
-    jest.setTimeout(10000);
+    jest.setTimeout(50000);
     it("Test cache set and get", async () => {
         let id = 'YYXX';
         let current_post = makePost(id, "XX", "xx", ["sas"], ["sadas"], "asd", 55, {
@@ -21,7 +21,7 @@ describe("Testing cache connection", () => {
         expect(isSet).toBe(true);
         expect(isDel).toBe(true);
         expect(post.id).toBe(current_post.id);
-        expect(post.postContent?.ingredients).toBe(current_post.postContent?.ingredients);
-        expect(post.tags).toBe(current_post.tags);
+        expect(post.postContent?.ingredients.length).toBe(current_post.postContent?.ingredients.length);
+        expect(post.postContent?.ingredients[0]).toBe(current_post.postContent?.ingredients[0]);
     });
 });

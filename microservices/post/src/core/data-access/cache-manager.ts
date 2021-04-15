@@ -1,4 +1,4 @@
-import { cache_server, delete_ref } from "../../config";
+import { cache_local_server, cache_server, delete_ref } from "../../config";
 import CacheManager from "../usecases/cache/cache-interface";
 import { CacheExceptionManager } from "./exception";
 import fetch from "node-fetch";
@@ -8,7 +8,7 @@ export default class ICacheManager implements CacheManager {
     constructor(private _cache_exception_manager: CacheExceptionManager) {}
     async set(key: string, value: Post): Promise<boolean> {
         try {
-            let response = await fetch(cache_server, {
+            let response = await fetch(cache_local_server, {
                 method: "PUT",
                 headers: { "content-type": "application/json" },
                 body: JSON.stringify({
@@ -30,7 +30,7 @@ export default class ICacheManager implements CacheManager {
     }
     async del(key: string): Promise<boolean> {
         try {
-            let response = await fetch(cache_server + delete_ref, {
+            let response = await fetch(cache_local_server + delete_ref, {
                 method: "PUT",
                 headers: { "content-type": "application/json" },
                 body: JSON.stringify({
@@ -51,7 +51,7 @@ export default class ICacheManager implements CacheManager {
     }
     async get(key: string): Promise<Post> {
         try {
-            let response = await fetch(cache_server, {
+            let response = await fetch(cache_local_server, {
                 method: "POST",
                 headers: { "content-type": "application/json" },
                 body: JSON.stringify({
