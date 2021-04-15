@@ -1,4 +1,3 @@
-import { buildMakePost } from './make-post'
-import * as uuid from 'uuid'
+import { buildMakePost } from './make-post';
 
 export const makePost = buildMakePost();

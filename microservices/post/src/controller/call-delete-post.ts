@@ -1,18 +1,14 @@
-import { HEADERS, RESPONSE_TYPE, STATUS_CODE_SUCCESS } from "../../config";
-import { FridgeControllerException } from "./exception/exception-interface";
-import * as uuid from "uuid";
+import { HEADERS, RESPONSE_TYPE, STATUS_CODE_SUCCESS } from "../config";
+import { PostControllerExceptionManager } from "./exception/controller-interfacet";
 
-export default function makeAddFridgeController(
-    FridgeControllerException: FridgeControllerException,
-    { addFridge }
+export default function makeDeletePostController(
+    PostControllerExceptionManager: PostControllerExceptionManager,
+    { deletePost }
 ) {
-    return async function addFridgeController(request) {
+    return async function deletePostController(request) {
         try {
-            const add_fridge = await addFridge(
-                uuid.v4(),
-                request.body.ingredients,
-                request.body.capacities,
-                request.body.units,
+            const delete_post = await deletePost(
+                request.body.id,
             );
             const headers = HEADERS;
             const statusCode = STATUS_CODE_SUCCESS;
@@ -22,11 +18,11 @@ export default function makeAddFridgeController(
                 statusCode: statusCode,
                 type: type,
                 body: {
-                    response: add_fridge,
-                }
+                    response: delete_post,
+                },
             };
         } catch (exception) {
-            FridgeControllerException.insertException(exception);
+            PostControllerExceptionManager.deletePostControllerHandler(exception);
             const headers = HEADERS;
             const statusCode = STATUS_CODE_SUCCESS;
             const type = RESPONSE_TYPE;
@@ -36,7 +32,7 @@ export default function makeAddFridgeController(
                 type: type,
                 body: {
                     exception: exception,
-                }
+                },
             };
         }
     };

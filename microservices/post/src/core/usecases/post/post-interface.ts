@@ -1,4 +1,4 @@
-import { Post } from "../entities/post";
+import { Post } from "../../entities/post";
 
 export interface IPostDb {
     addPost(post: Post): Promise<boolean>;
